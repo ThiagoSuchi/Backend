@@ -12,4 +12,6 @@ server.listen(port, () => {
     console.log(`Servidor escutando porta http://localhost:${port}`)
 })
 
+
+
 // executar node server.js=

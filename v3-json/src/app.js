@@ -4,27 +4,29 @@ import express from "express";
 //instanciando express
 const app = express();
 
+app.use(express.json())
+
 // array de grupos para retorno
 const grupos = [
-    {id: 0, "todos": "Todos"},
-    {id: 1, "admin": "Administradores"}, 
-    {id: 2, "gerentes":"Gerentes"},
-    {id: 3, "usuarios": "Usuários limitados"}
+    {id: 0, nome: "Todos"},
+    {id: 1, nome: "Administradores"}, 
+    {id: 2, nome: "Gerentes"},
+    {id: 3, nome: "Usuários limitados"}
 ]
 // array de unidades para retorno
 const unidades = [
-    {id: 0, "Porto Velho": "Porto Velho"},
-    {id: 1, "Vilhena": "Vilhena"},
-    {id: 2, "Cacoal":"Cacoal"},
-    {id: 3, "Guajará": "Guajará"}
+    {id: 0, nome: "Porto Velho"},
+    {id: 1, nome: "Vilhena"},
+    {id: 2, nome: "Cacoal"},
+    {id: 3, nome: "Guajará"}
 ]
 
 // array de usuarios para retorno
 const usuarios = [
-    {id: 0, "jose": "José da Silva"},
-    {id: 1, "vicentesilva": "Vicente da Silva"},
-    {id: 2, "noesilva":"Noé Silva"},
-    {id: 3, "thomesilva": "Thomé Silva"}
+    {id: 0, nome: "José da Silva"},
+    {id: 1, nome: "Vicente da Silva"},
+    {id: 2, nome: "Noé Silva"},
+    {id: 3, nome: "Thomé Silva"}
 ]
 
 // Rota vazia - raiz
@@ -44,6 +46,29 @@ app.get('/unidades', (req, res) => {
 app.get('/usuarios', (req, res) => {
     res.status(200).json(usuarios);
 })
+
+app.post('/usuarios', (req, res) => {
+    console.log(req.body);
+    usuarios.push(req.body);
+    res.status(200).json(usuarios)
+})
+
+app.put('/usuarios/:id', (req, res) => {
+    let index = buscar(req.params.id);
+    usuarios[index].nome = req.body.nome
+    res.json(usuarios[index])
+})
+
+app.delete('/usuarios/:id', (req, res) => {
+    let { id } = req.params
+    let index = buscar(id, usuarios)
+    usuarios.splice(index, 1)
+    res.send(`Usuário de ID ${id} deletado com sucesso!`)
+})
+
+function buscar(id, array) {
+    return array.findIndex(item => item.id == id)
+}
 
 // exportando para o server.js fazer uso
 export default app
